@@ -232,6 +232,7 @@ const Interpreter = class $_ {
         const rightSide = tokens.slice(secondaryIndex + 1);
 
         return this.handleOperation([
+            // TODO: check if handling operation here is needed
             this.handleOperation(leftSide),
             tokens[secondaryIndex],
             $_.hasSecondaryOperators(rightSide) ? this.handleMixedOperations(rightSide) : this.handleOperation(rightSide),
@@ -246,13 +247,13 @@ const Interpreter = class $_ {
         const rightSide = tokens.slice(closingIndex + 1);
 
         return this.handleOperation(
-            (($_.isEmptyArray(preParenthesis) ? [''] : preParenthesis))
+            ($_.isEmptyArray(preParenthesis) ? [''] : preParenthesis)
                 .concat([
                     this.decide(parenthesis),
                     $_.isOperator(rightSide[0]) ? rightSide[0] : '',
                     this.decide($_.isOperator(rightSide[0]) ? rightSide.slice(1) : rightSide),
                 ])
-            .filter($_.isNotEmptyString)
+                .filter($_.isNotEmptyString)
         );
     }
 
