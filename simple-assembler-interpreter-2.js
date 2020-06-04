@@ -10,11 +10,13 @@ function parsedProgram(programInput) {
                 if (lineWithoutComment) {
                     memory.program.push(lineWithoutComment);
 
-                    if (/^\w+:$/.test(lineWithoutComment)) {
+                    const isFunctionLabel = /^\w+:$/.test(lineWithoutComment);
+                    if (isFunctionLabel) {
                         memory.functions[lineWithoutComment.slice(0, -1)] = memory.program.length - 1;
                     }
 
-                    if (memory.hasMissingEnd && lineWithoutComment == 'end') {
+                    const shouldMarkProgramEndingCorrectly = memory.hasMissingEnd && lineWithoutComment == 'end';
+                    if (shouldMarkProgramEndingCorrectly) {
                         memory.hasMissingEnd = false;
                     }
                 }
