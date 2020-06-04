@@ -14,14 +14,14 @@ function parsedProgram(programInput) {
                         memory.functions[lineWithoutComment.slice(0, -1)] = memory.program.length - 1;
                     }
 
-                    if (!memory.hasMissingEnd && lineWithoutComment == 'end') {
-                        memory.hasMissingEnd = true;
+                    if (memory.hasMissingEnd && lineWithoutComment == 'end') {
+                        memory.hasMissingEnd = false;
                     }
                 }
 
                 return memory;
             },
-            { program: [], functions: {}, hasMissingEnd: false },
+            { program: [], functions: {}, hasMissingEnd: true },
         );
 }
 
