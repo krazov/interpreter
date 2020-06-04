@@ -10,14 +10,20 @@ function parsedProgram(programInput) {
                 if (lineWithoutComment) {
                     memory.program.push(lineWithoutComment);
 
-                    if (/^\w+:$/.test(lineWithoutComment)) {
+                    const isFunctionLabel = /^\w+:$/.test(lineWithoutComment);
+                    if (isFunctionLabel) {
                         memory.functions[lineWithoutComment.slice(0, -1)] = memory.program.length - 1;
+                    }
+
+                    const shouldMarkProgramEndingCorrectly = memory.hasMissingEnd && lineWithoutComment == 'end';
+                    if (shouldMarkProgramEndingCorrectly) {
+                        memory.hasMissingEnd = false;
                     }
                 }
 
                 return memory;
             },
-            { program: [], functions: {} },
+            { program: [], functions: {}, hasMissingEnd: true },
         );
 }
 
@@ -60,9 +66,9 @@ function byMsgFormat(line) {
 }
 
 function assemblerInterpreter(programInput) {
-    const { program, functions } = parsedProgram(programInput);
+    const { program, functions, hasMissingEnd } = parsedProgram(programInput);
 
-    if (!program.includes('end')) return -1;
+    if (hasMissingEnd) return -1;
 
     const programSize = program.length;
 
